@@ -3,25 +3,51 @@ package main
 
 import "fmt"
 
-type person struct {
-	nom, prenom string
-	age         int
+type temperature struct {
+	min, max float32
 }
 
-func (p person) String() string {
-	return fmt.Sprintf("L'utilisateur est %s %s, et il a %d ans!\n", p.prenom, p.nom, p.age)
+type ftemperature struct {
+	min, max float32
+}
+
+func (t ftemperature) String() string {
+	return fmt.Sprintf("(%2.1f, %2.1f)/F", t.min, t.max)
+}
+
+func (t temperature) String() string {
+	return fmt.Sprintf("(%2.1f, %2.1f)/C", t.min, t.max)
+}
+
+func (t temperature) toFareinheight() ftemperature {
+	temp := ftemperature{}
+	temp.min = t.min * -17.22222
+	temp.max = t.max * -17.22222
+	return temp
 }
 
 func main() {
-	Omar := person{"FAll", "Omar", 42}
-	fmt.Println(Omar)
+	temps := make(map[string]map[string]temperature)
 
-	temp := make(map[string]float32)
-	temp["Dakar"] = 35.2
-	temp["Thiès"] = 40.1
-	temp["Matam"] = 42.3
+	dakar := make(map[string]temperature)
+	dakar["jan"] = temperature{20.9, 22.8}
+	dakar["feb"] = temperature{26.9, 22.8}
+	dakar["mar"] = temperature{21.9, 22.8}
+	dakar["avr"] = temperature{21.9, 22.8}
+	dakar["mai"] = temperature{18.9, 22.8}
+	dakar["jun"] = temperature{21.9, 22.8}
+	dakar["jui"] = temperature{21.9, 22.8}
+	dakar["aou"] = temperature{25.9, 22.8}
+	dakar["sep"] = temperature{17.9, 26.8}
+	dakar["nov"] = temperature{19.9, 22.8}
+	dakar["dec"] = temperature{21.9, 22.8}
+	temps["dakar"] = dakar
 
-	for i, t := range temp {
-		fmt.Printf("%s : %f\n", i, t)
+	for region, temperatures := range temps {
+		fmt.Printf("%s\n", region)
+		for mois, temperature := range temperatures {
+			converted := temperature.toFareinheight()
+			fmt.Printf("\t%s %s %s \n", mois, temperature, converted)
+		}
 	}
 }
