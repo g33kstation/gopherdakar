@@ -14,8 +14,14 @@ func (p person) String() string {
 
 func main() {
 	Omar := person{"FAll", "Omar", 42}
-	// Go est compatible utf-8 par default (caratère arabe, chinois, emojis)
-	fmt.Println("Hello world 😋")
-
 	fmt.Println(Omar)
+
+	temp := make(map[string]float32)
+	temp["Dakar"] = 35.2
+	temp["Thiès"] = 40.1
+	temp["Matam"] = 42.3
+
+	for i, t := range temp {
+		fmt.Printf("%s : %f\n", i, t)
+	}
 }
