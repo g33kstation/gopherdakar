@@ -1,18 +1,13 @@
 // Gophers Dakar - 2020
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type temperature struct {
 	min, max float32
-}
-
-type ftemperature struct {
-	min, max float32
-}
-
-func (t ftemperature) String() string {
-	return fmt.Sprintf("(%2.1f, %2.1f)/F", t.min, t.max)
 }
 
 func (t temperature) String() string {
@@ -26,28 +21,36 @@ func (t temperature) toFareinheight() ftemperature {
 	return temp
 }
 
-func main() {
-	temps := make(map[string]map[string]temperature)
+type ftemperature struct {
+	min, max float32
+}
 
-	dakar := make(map[string]temperature)
-	dakar["jan"] = temperature{20.9, 22.8}
-	dakar["feb"] = temperature{26.9, 22.8}
-	dakar["mar"] = temperature{21.9, 22.8}
-	dakar["avr"] = temperature{21.9, 22.8}
-	dakar["mai"] = temperature{18.9, 22.8}
-	dakar["jun"] = temperature{21.9, 22.8}
-	dakar["jui"] = temperature{21.9, 22.8}
-	dakar["aou"] = temperature{25.9, 22.8}
-	dakar["sep"] = temperature{17.9, 26.8}
-	dakar["nov"] = temperature{19.9, 22.8}
-	dakar["dec"] = temperature{21.9, 22.8}
-	temps["dakar"] = dakar
+func (t ftemperature) String() string {
+	return fmt.Sprintf("(%2.1f, %2.1f)/F", t.min, t.max)
+}
 
-	for region, temperatures := range temps {
-		fmt.Printf("%s\n", region)
-		for mois, temperature := range temperatures {
-			converted := temperature.toFareinheight()
-			fmt.Printf("\t%s %s %s \n", mois, temperature, converted)
-		}
+type region struct {
+	nom          string
+	temperatures [12]temperature
+}
+
+func (r region) String() string {
+	return fmt.Sprintf("Région: %s\n%s", r.nom, r.temperaturesString())
+}
+
+var mois = [12]string{"jan", "fév", "mar", "avr", "mai", "jun", "jui", "aoû", "sep", "oct", "nov", "dec"}
+
+func (r region) temperaturesString() string {
+	str := []string{}
+	for idx, t := range r.temperatures {
+		mois := mois[idx]
+		converted := t.toFareinheight()
+		str = append(str, fmt.Sprintf("  %s %s %s", mois, t.String(), converted.String()))
 	}
+	return strings.Join(str, "\n")
+}
+
+func main() {
+	dk := region{"Dakar", [12]temperature{}}
+	fmt.Println(dk)
 }
