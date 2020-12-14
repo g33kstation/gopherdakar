@@ -4,6 +4,7 @@ package space
 // Planet define a solar system planet
 type Planet string
 
+const earthYear = 31557600.0 // Earth year in seconds
 
 var orbitalPeriod = map[Planet]float64{
 	"Mercury": 0.2408467,
